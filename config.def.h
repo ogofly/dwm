@@ -87,8 +87,9 @@ static const Rule rules[] = {
 	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 	{ "wechat",  NULL,     NULL, 0,        1,         0,          1,           -1 }, /* xev */
 	{ NULL,      NULL,     "微信", 0,      1,         0,          1,           -1 }, /* xev */
-	{ "float",   NULL,     NULL,           0,         1,          1,           0,        -1 },
-	{ NULL,      NULL,     "Fcitx",        0,         1,          0,           1,        -1 }
+	{ "float",   NULL,     NULL,           0,         1,          0,           1,        -1 },
+	{ NULL,      NULL,     "Fcitx",        0,         1,          0,           1,        -1 },
+	{ NULL,      NULL,     "dragon-drop",  0,         1,          0,           1,        -1 },
 };
 
 #include "vanitygaps.c"
