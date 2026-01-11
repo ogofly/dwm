@@ -191,6 +191,7 @@ static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
 static void attachstack(Client *c);
+static void centerfloating(Client *c);
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
 static void cleanup(void);
@@ -1364,6 +1365,7 @@ manage(Window w, XWindowAttributes *wa)
 		c->mon = selmon; /* assigns to selected monitor */
 		term = termforwin(c); /* tries to find a terminal for swallowing */
 		applyrules(c); /* apply any matching tag rules from config.h */
+    if (c->isfloating) centerfloating(c);
 	}
 		/* ensure window fits to visible bounds of monitor */
 	if (c->x + WIDTH(c) > c->mon->wx + c->mon->ww)
@@ -2016,6 +2018,18 @@ showhide(Client *c)
 	}
 }
 
+static void
+centerfloating(Client *c)
+{
+    Monitor *m = c->mon;
+
+    if (!m)
+        return;
+
+    c->x = m->mx + (m->mw - c->w) / 2;
+    c->y = m->my + (m->mh - c->h) / 2;
+    resizeclient(c, c->x, c->y, c->w, c->h);
+}
 
 void
 sigstatusbar(const Arg *arg)
