@@ -610,8 +610,8 @@ buttonpress(XEvent *e)
 			arg.ui = 1 << i;
 		} else if (ev->x < x + TEXTW(selmon->ltsymbol) && selmon->showlayout)
 			click = ClkLtSymbol;
-		else if (ev->x > selmon->ww - statusw - getsystraywidth() && selmon->showstatus) {
-			x = selmon->ww - statusw - getsystraywidth();
+		else if (ev->x > selmon->ww - (showsystray && !systrayonleft ? getsystraywidth() : 0) - 2 * sp - statusw && selmon->showstatus) {
+			x = selmon->ww - (showsystray && !systrayonleft ? getsystraywidth() : 0) - 2 * sp - statusw;
 			click = ClkStatusText;
 			statussig = 0; /* statuscmd stuff */
 			for (text = s = stext; *s && x <= ev->x; s++) { /* loop through to determine which block was clicked */
@@ -624,26 +624,11 @@ buttonpress(XEvent *e)
 					if (x >= ev->x) /* check click pos */
 						break;
 					statussig = ch; /* save control char as sig # */
-						}
 				}
-		} else if (selmon->showtitle) {
-			statussig = 0;
-			for (text = s = stext; *s && x <= ev->x; s++) {
-				if ((unsigned char)(*s) < ' ') {
-					ch = *s;
-					*s = '\0';
-					x += TEXTW(text) - lrpad;
-					*s = ch;
-					text = s + 1;
-					if (x >= ev->x)
-						break;
-					statussig = ch;
-								}
-						}
 			}
 		} else
-			click = ClkWinTitle; 
-		if ((c = wintoclient(ev->window))) {
+			click = ClkWinTitle;
+	} else if ((c = wintoclient(ev->window))) {
 		focus(c);
 		restack(selmon);
 		XAllowEvents(dpy, ReplayPointer, CurrentTime);
@@ -1040,7 +1025,7 @@ drawbar(Monitor *m) /* take a pointer to the monitor we want to draw the bar on 
 	}
 
 
-	if ((w = m->ww - tw - stw - x) > bh) {
+	if ((w = m->ww - tw - (showsystray && m == systraytomon(m) ? getsystraywidth() : 0) - x) > bh) {
 		if (m->sel && selmon->showtitle) {
 			drw_setscheme(drw, scheme[m == selmon ? SchemeInfoSel : SchemeInfoNorm]);
 			drw_text(drw, x, 0, w - 2 * sp, bh, lrpad / 2, m->sel->name, 0);
@@ -2635,7 +2620,7 @@ updatebars(void)
 		if (m->barwin)
 			continue;
 		w = m->ww;
-		if (showsystray && m == systraytomon(m))
+		if (showsystray && m == systraytomon(m) && !systrayonleft)
 			w -= getsystraywidth();
 		m->barwin = XCreateWindow(dpy, root, m->wx + sp, m->by + vp, w - 2 * sp, bh, 0, DefaultDepth(dpy, screen),
 				CopyFromParent, DefaultVisual(dpy, screen),
@@ -2900,13 +2885,12 @@ updatesystray(void)
 	Monitor *m = systraytomon(NULL);
 	unsigned int x = m->mx + m->mw - sp;
 	unsigned int y = m->by + vp;
-	unsigned int sw = TEXTW(stext) - lrpad + systrayspacing;
 	unsigned int w = 1;
 
 	if (!showsystray)
 		return;
 	if (systrayonleft)
-		x -= sw + lrpad / 2;
+		x -= statusw + sp;
 	if (!systray) {
 		/* init systray */
 		if (!(systray = (Systray *)calloc(1, sizeof(Systray))))
