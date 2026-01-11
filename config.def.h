@@ -41,6 +41,7 @@ static int topbar                   = 1;        /* 0 means bottom bar */
 
 static char dmenufont[]             = "monospace:size=10";
 static const char *fonts[]          = { "monospace:size=10", "Hack Nerd Font Mono:size=16", "NotoColorEmoji:pixelsize=14:antialias=true:autohint=true"  };
+// static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=12", "JetBrainsMono Nerd Font:size=18", "NotoColorEmoji:pixelsize=14:antialias=true:autohint=true"  };
 
 /* default colors used if xrdb is not loaded */
 static char normbgcolor[]           = "#2e3440";
@@ -75,8 +76,11 @@ static const Rule rules[] = {
 	 */
 	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
 	{ "St",      NULL,     NULL,           0,         0,          1,           0,        -1 },
-	{ "fzfmenu", NULL,     "fzf", 	0,         1,          1,           1,        -1 }, /* xev */
+	{ "fzfmenu", NULL,     "fzf", 	0,     1,         1,           1,        -1 }, /* xev */
 	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
+	{ NULL,      NULL,     "Weixin", 0,    1,         0,           1,        -1 }, /* xev */
+	{ NULL,      NULL,     "微信", 0,      1,         0,           1,        -1 }, /* xev */
+	{ "float",      NULL,     NULL,           0,         1,          1,           0,        -1 },
 };
 
 #include "vanitygaps.c"
@@ -127,7 +131,8 @@ static const Layout layouts[] = { /* alt glyphs: 󱡗 󱏋 */
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "st", NULL };
+// static const char *dmenucmd[] = { "rofi", "-show", "drun", "-show-icons"};
+static const char *termcmd[]  = { "alacritty", NULL };
 
 
 static const Arg tagexec[] = { /* spawn application when tag is middle-clicked */
@@ -246,24 +251,29 @@ static const Key keys[] = {
 	{ MODKEY,				XK_r,      spawn,       {.v = (const char*[]){ "rec", NULL } } },
 	{ MODKEY|ShiftMask,		XK_grave,  spawn,       {.v = (const char*[]){ "define", NULL } } },
 	{ MODKEY|ShiftMask,		XK_w,      spawn,       {.v = (const char*[]){ "wallpapermenu", NULL } } },
-	{ MODKEY,				XK_F1,     spawn,       SHCMD("screenshot") },
-	{ MODKEY|ShiftMask,		XK_F1,     spawn,       SHCMD("screenshot color") },
+	// { MODKEY,				XK_F1,     spawn,       SHCMD("screenshot") },
+	// { MODKEY|ShiftMask,		XK_F1,     spawn,       SHCMD("screenshot color") },
+	{ MODKEY|ControlMask,				XK_a,     spawn,       SHCMD("screenshot") },
+	{ MODKEY|ShiftMask,		XK_a,     spawn,       SHCMD("screenshot color") },
 	{ MODKEY,				XK_F2,     spawn,       {.v = (const char*[]){ "vb", NULL } } },
 	{ MODKEY|ShiftMask,		XK_F2,     spawn,       {.v = (const char*[]){ "dmenutemp", NULL } } },
 	{ MODKEY,				XK_F3,     spawn,       {.v = (const char*[]){ "phototransfer", NULL } } },
 
 
 /* other bindings */
-	{ MODKEY,				XK_F12,    spawn,       SHCMD("playerctl -p termusic next") },
-	{ MODKEY,				XK_F11,    spawn,       SHCMD("playerctl -p termusic play-pause") },
-	{ MODKEY|ShiftMask,		XK_F11,    spawn,       SHCMD("playerctl play-pause") },
-	{ MODKEY,				XK_F10,    spawn,       SHCMD("playerctl -p termusic previous") },
+// 	{ MODKEY,				XK_F12,    spawn,       SHCMD("playerctl -p termusic next") },
+// 	{ MODKEY,				XK_F11,    spawn,       SHCMD("playerctl -p termusic play-pause") },
+// 	{ MODKEY|ShiftMask,		XK_F11,    spawn,       SHCMD("playerctl play-pause") },
+// 	{ MODKEY,				XK_F10,    spawn,       SHCMD("playerctl -p termusic previous") },
 	{ MODKEY|ShiftMask,		XK_F8,     spawn,       SHCMD("slock systemctl suspend -i") },
 	{ MODKEY,				XK_F8,     spawn,       SHCMD("slock") },
 	{ MODKEY,				XK_F7,     spawn,       SHCMD("status-timer") },
 	{ MODKEY|ShiftMask,		XK_F7,     spawn,       SHCMD("status-timer cleanup") },
-	{ MODKEY,				XK_F6,     spawn,       SHCMD("amixer -D pulse sset Master 5%+") },
-	{ MODKEY,				XK_F5,     spawn,       SHCMD("amixer -D pulse sset Master 5%-") },
+
+  // volume
+	{ MODKEY,				XK_F11,     spawn,       SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -RTMIN+10 dwmblocks") },
+	{ MODKEY,				XK_F10,     spawn,       SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle && pkill -RTMIN+10 dwmblocks") },
+	{ MODKEY,				XK_F12,     spawn,       SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -RTMIN+10 dwmblocks") },
 };
 
 
