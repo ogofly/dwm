@@ -43,7 +43,7 @@ static const unsigned int systrayonleft = 1;    /* 0: systray in the right corne
 static const unsigned int systrayspacing = 12;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
 static const int showsystray        = 1;        /* 0 means no systray */
-static const int vertpad            = 5;       /* vertical padding of bar */
+static const int vertpad            = 3;       /* vertical padding of bar */
 static const int sidepad            = 10;       /* horizontal padding of bar */
 
 static char dmenufont[]             = "monospace:size=10";
@@ -85,11 +85,13 @@ static const Rule rules[] = {
 	{ "St",      NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ "fzfmenu", NULL,     "fzf",          0,         1,          1,           1,        -1 }, /* xev */
 	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
-	{ "wechat",  NULL,     NULL, 0,        1,         0,          1,           -1 }, /* xev */
-	{ NULL,      NULL,     "微信", 0,      1,         0,          1,           -1 }, /* xev */
+	{ "wechat",  NULL,     NULL,           0,         1,          0,           1,        -1 }, /* xev */
+	{ NULL,      NULL,     "微信",         0,         1,          0,           1,        -1 }, /* xev */
 	{ "float",   NULL,     NULL,           0,         1,          0,           1,        -1 },
 	{ NULL,      NULL,     "Fcitx",        0,         1,          0,           1,        -1 },
 	{ NULL,      NULL,     "dragon-drop",  0,         1,          0,           1,        -1 },
+	{ "clash-verge",   NULL,     NULL,     0,         1,          0,           1,        -1 },
+	{ "Clash-verge",   NULL,     NULL,     0,         1,          0,           1,        -1 },
 };
 
 #include "vanitygaps.c"
@@ -140,7 +142,7 @@ static const Layout layouts[] = { /* alt glyphs: 󱡗 󱏋 */
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
-static const char *roficmd[] = { "rofi", "-show", "combi", "-combi-modi", "drun,run", "-show-icons"};
+static const char *roficmd[] = { "rofi", "-show", "combi", "-combi-modi", "drun,run", "-show-icons", "-theme-str", "window {width: 20%;}" };
 static const char *termcmd[]  = { "alacritty", NULL };
 
 
